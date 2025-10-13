@@ -1,0 +1,148 @@
+import React, { useState } from 'react';
+import { BASE_URL } from '../api/config/api';
+import { Container, Row, Col } from 'react-bootstrap';
+import UrlInput from '../components/input';
+import Loader from '../components/loader';
+import { extractVideo } from '../api/extractor';
+import './home.css';
+import DownloadOptions from '../components/downloadbutton';
+
+export default function Home() {
+  const [url, setUrl] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!url.trim()) return;
+
+    setLoading(true);
+    setError(null);
+    setData(null);
+
+    try {
+      const result = await extractVideo(url);
+      setData(result);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to extract video. Please check the URL and try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="home-page">
+      <Container>
+        <Row className="justify-content-center">
+          <Col lg={10} xl={8}>
+            <div className="hero-section">
+              <div className="decorative-icons">
+                <div className="icon icon-star"></div>
+                <div className="icon icon-youtube"></div>
+                <div className="icon icon-music"></div>
+                <div className="icon icon-play"></div>
+              </div>
+
+              <h1 className="hero-title">
+                All-in-One Video <span className="title-highlight">Downloader</span>
+              </h1>
+
+              <p className="hero-subtitle">
+                Download videos from YouTube, TikTok, Instagram, Twitter and more. 
+                Fast, free, and easy to use. No registration required.
+              </p>
+
+               {data && (
+                <DownloadOptions
+                  proxyUrl={data.proxy_url}
+                  title={data.title}
+                  thumbnail={data.thumbnail}
+                  platform={data.platform}
+                />
+              )}
+
+              <div className="input-section">
+                <UrlInput url={url} setUrl={setUrl} onSubmit={handleSubmit} />
+
+                {loading && <Loader />}
+
+                {error && (
+                  <div className="error-message">
+                    <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                    {error}
+                  </div>
+                )}
+              </div>
+
+
+              <div className="supported-platforms">
+                <p className="platforms-label">Supported Platforms:</p>
+                <div className="platforms-list">
+                  <div className="platform-chip">
+                    <i className="bi bi-youtube"></i>
+                    YouTube
+                  </div>
+                  <div className="platform-chip">
+                    <i className="bi bi-tiktok"></i>
+                    TikTok
+                  </div>
+                  <div className="platform-chip">
+                    <i className="bi bi-instagram"></i>
+                    Instagram
+                  </div>
+                  <div className="platform-chip">
+                    <i className="bi bi-twitter"></i>
+                    Twitter
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="features-section">
+              <h2 className="features-title">Why Choose Our Downloader?</h2>
+              <div className="features-grid">
+                <div className="feature-card">
+                  <div className="feature-icon">
+                    <i className="bi bi-lightning-charge-fill"></i>
+                  </div>
+                  <h3>Lightning Fast</h3>
+                  <p>Download videos in seconds with our optimized servers</p>
+                </div>
+                <div className="feature-card">
+                  <div className="feature-icon">
+                    <i className="bi bi-shield-check"></i>
+                  </div>
+                  <h3>100% Safe</h3>
+                  <p>No malware, no ads, completely secure downloads</p>
+                </div>
+                <div className="feature-card">
+                  <div className="feature-icon">
+                    <i className="bi bi-phone"></i>
+                  </div>
+                  <h3>All Devices</h3>
+                  <p>Works on desktop, mobile, and tablet devices</p>
+                </div>
+                <div className="feature-card">
+                  <div className="feature-icon">
+                    <i className="bi bi-infinity"></i>
+                  </div>
+                  <h3>Unlimited</h3>
+                  <p>Download as many videos as you want, no limits</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="warning-banner">
+              <i className="bi bi-shield-exclamation"></i>
+              <p>WE DO NOT ALLOW/SUPPORT THE DOWNLOAD OF COPYRIGHTED MATERIAL!</p>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+
+  
+    </div>
+  );
+}
