@@ -13,24 +13,38 @@ export default function Home() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!url.trim()) return;
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!url.trim()) return;
 
-    setLoading(true);
-    setError(null);
-    setData(null);
+  setLoading(true);
+  setError(null);
+  setData(null);
 
-    try {
-      const result = await extractVideo(url);
-      setData(result);
-    } catch (err) {
-      console.error(err);
-      setError('Failed to extract video. Please check the URL and try again.');
-    } finally {
-      setLoading(false);
+  try {
+    const result = await extractVideo(url);
+
+    // Check for backend-level errors
+    if (result.detail) {
+      setError(result.detail);
+      return;
     }
-  };
+
+    // Check for progressive availability
+    if (!result.proxy_url && !result.best_audio) {
+      setError("No downloadable formats available for this video.");
+      return;
+    }
+
+    setData(result);
+
+  } catch (err) {
+    console.error(err);
+    setError(err.message || "Failed to extract video. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="home-page">
@@ -67,13 +81,26 @@ export default function Home() {
                 <UrlInput url={url} setUrl={setUrl} onSubmit={handleSubmit} />
 
                 {loading && <Loader />}
+{error && (
+  <div className="error-alert text-center mt-3">
+    <div
+      style={{
+        background: "rgba(239, 68, 68, 0.1)",
+        border: "1px solid rgba(239, 68, 68, 0.4)",
+        color: "#f87171",
+        borderRadius: "8px",
+        padding: "1rem",
+        maxWidth: "500px",
+        margin: "0 auto",
+        fontWeight: "500",
+      }}
+    >
+      <i className="bi bi-exclamation-triangle-fill me-2"></i>
+      {error}
+    </div>
+  </div>
+)}
 
-                {error && (
-                  <div className="error-message">
-                    <i className="bi bi-exclamation-triangle-fill me-2"></i>
-                    {error}
-                  </div>
-                )}
               </div>
 
 
