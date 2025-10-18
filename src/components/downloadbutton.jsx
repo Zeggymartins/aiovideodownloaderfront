@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, ButtonGroup, Card } from "react-bootstrap";
 import { Loader2, CheckCircle } from "lucide-react";
-import PlatformBadge from "./platformBadge";
+import PlatformBadge from "./platformbadge";
 import "./components.module.css";
 
 const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail }) => {
