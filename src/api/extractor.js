@@ -90,6 +90,7 @@ export const extractVideo = async (url) => {
         }
 
         // Normalize the response to ensure all required fields exist
+        // Only accept proxy_url from backend
         const normalizedData = {
             platform: videoData.platform || platform,
             title: videoData.title || 'Untitled Video',
@@ -99,15 +100,18 @@ export const extractVideo = async (url) => {
             views: videoData.views || null,
             likes: videoData.likes || null,
             description: videoData.description || null,
-            proxy_url: videoData.proxy_url || null,
-            video_url: videoData.video_url || videoData.page_url || null,
-            original_url: videoData.original_url || url,  // Store original URL for downloads
+
+            proxy_url: videoData.proxy_url,
+
+            video_url: videoData.video_url || null,
         };
 
+
         // Validation: Ensure we have a downloadable URL
-        if (!normalizedData.proxy_url && !normalizedData.video_url) {
-            throw new Error('No downloadable URL found in the response');
+        if (!normalizedData.proxy_url) {
+            throw new Error('Server did not return a valid download URL.');
         }
+
 
         console.log('📦 Normalized data:', normalizedData);
         return normalizedData;

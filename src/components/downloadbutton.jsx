@@ -4,13 +4,21 @@ import { Loader2, CheckCircle, AlertCircle, Download, Music } from "lucide-react
 import PlatformBadge from "./platformbadge";
 import "./components.module.css";
 
-const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, originalUrl }) => {
+const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail }) => {
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [loadingAudio, setLoadingAudio] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState(null);
 
   const handleDownload = async (kind = "video") => {
+    proxyUrl = proxyUrl.trim();
+    if (proxyUrl.includes("video_url=")) {
+      const parts = proxyUrl.split("video_url=");
+      const before = parts[0];
+      const after = encodeURIComponent(decodeURIComponent(parts[1].split("&")[0]));
+      proxyUrl = before + "video_url=" + after;
+    }
+
     try {
       if (kind === "video") setLoadingVideo(true);
       if (kind === "audio") setLoadingAudio(true);
@@ -20,7 +28,7 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
       console.log(`🎯 Starting ${kind} download...`);
       console.log(`Platform: ${platform}`);
       console.log(`Proxy URL: ${proxyUrl}`);
-      console.log(`Original URL: ${originalUrl}`);
+      // console.log(`Original URL: ${originalUrl}`);
       console.log(`Title: ${title}`);
 
       // Build download URL
