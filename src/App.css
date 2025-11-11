@@ -24,31 +24,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  /* color: var(--text-primary) ; */
+  color: var(--text-primary);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-}
-
-/* Force white text globally */
-body, body * {
-  color: var(--text-primary);
-}
-
-/* Exceptions for specific elements that should keep their colors */
-.error-message,
-.error-message * {
-  color: #fca5a5 !important;
-}
-
-.platform-chip,
-.platform-chip * {
-  color: var(--text-primary) !important;
-}
-
-.badge-custom,
-.badge-custom * {
-  color: white !important;
 }
 
 /* Background Pattern */
@@ -121,13 +100,6 @@ body, body * {
   min-height: 100vh;
 }
 
-/* Typography fixes */
-h1, h2, h3, h4, h5, h6,
-p, span, div, a,
-.card, .card * {
-  color: var(--text-primary) !important;
-}
-
 /* Form elements */
 input::placeholder {
   color: #94a3af !important;
@@ -138,10 +110,6 @@ input::placeholder {
 .card {
   background: rgba(31, 41, 55, 0.9) !important;
   color: var(--text-primary) !important;
-}
-
-.btn {
-  color: white !important;
 }
 
 code {

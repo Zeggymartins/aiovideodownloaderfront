@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import './components.module.css';
 
+
 const Layout = ({ children }) => {
   const [activeLink, setActiveLink] = useState('home');
 
@@ -58,7 +59,7 @@ const Layout = ({ children }) => {
                 className={activeLink === 'home' ? 'active' : ''}
                 onClick={() => handleNavClick('home')}
               >
-                <i className="bi bi-house-door-fill"></i>
+                <i className="bi bi-house-door-fill p-1"></i>
                 Home
               </Nav.Link>
               <Nav.Link 
@@ -66,7 +67,7 @@ const Layout = ({ children }) => {
                 className={activeLink === 'features' ? 'active' : ''}
                 onClick={() => handleNavClick('features')}
               >
-                <i className="bi bi-stars"></i>
+                <i className="bi bi-stars p-1"></i>
                 Features
               </Nav.Link>
               <Nav.Link 
@@ -74,7 +75,7 @@ const Layout = ({ children }) => {
                 className={activeLink === 'how-it-works' ? 'active' : ''}
                 onClick={() => handleNavClick('how-it-works')}
               >
-                <i className="bi bi-gear-fill"></i>
+                <i className="bi bi-gear-fill p-1"></i>
                 How It Works
               </Nav.Link>
               <Nav.Link 
@@ -82,7 +83,7 @@ const Layout = ({ children }) => {
                 className={activeLink === 'supported' ? 'active' : ''}
                 onClick={() => handleNavClick('supported')}
               >
-                <i className="bi bi-check-circle-fill"></i>
+                <i className="bi bi-check-circle-fill p-1"></i>
                 Supported
               </Nav.Link>
             </Nav>

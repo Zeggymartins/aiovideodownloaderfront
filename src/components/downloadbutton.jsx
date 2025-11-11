@@ -4,21 +4,13 @@ import { Loader2, CheckCircle, AlertCircle, Download, Music } from "lucide-react
 import PlatformBadge from "./platformbadge";
 import "./components.module.css";
 
-const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail }) => {
+const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, originalUrl }) => {
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [loadingAudio, setLoadingAudio] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState(null);
 
   const handleDownload = async (kind = "video") => {
-    proxyUrl = proxyUrl.trim();
-    if (proxyUrl.includes("video_url=")) {
-      const parts = proxyUrl.split("video_url=");
-      const before = parts[0];
-      const after = encodeURIComponent(decodeURIComponent(parts[1].split("&")[0]));
-      proxyUrl = before + "video_url=" + after;
-    }
-
     try {
       if (kind === "video") setLoadingVideo(true);
       if (kind === "audio") setLoadingAudio(true);
@@ -28,8 +20,19 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail }) 
       console.log(`🎯 Starting ${kind} download...`);
       console.log(`Platform: ${platform}`);
       console.log(`Proxy URL: ${proxyUrl}`);
-      // console.log(`Original URL: ${originalUrl}`);
+      console.log(`Original URL: ${originalUrl}`);
       console.log(`Title: ${title}`);
+      console.log(`Backend Root: ${backendRoot}`);
+
+      // Decode proxy URL to see what's inside
+      if (proxyUrl.includes('video_url=')) {
+        const urlMatch = proxyUrl.match(/video_url=([^&]+)/);
+        if (urlMatch) {
+          const encodedUrl = urlMatch[1];
+          const decodedUrl = decodeURIComponent(encodedUrl);
+          console.log(`🔍 URL in proxy_url (decoded): ${decodedUrl}`);
+        }
+      }
 
       // Build download URL
       let downloadUrl;
@@ -63,19 +66,57 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail }) 
 
       const response = await fetch(downloadUrl);
 
+      console.log(`📡 Response status: ${response.status}`);
+      console.log(`📡 Response headers:`, response.headers);
+
       if (!response.ok) {
-        let errorText;
+        let errorDetails;
+        const contentType = response.headers.get('content-type');
+
         try {
-          const errorJson = await response.json();
-          errorText = errorJson.detail?.error || errorJson.error || `Download failed with status ${response.status}`;
-        } catch {
-          errorText = await response.text();
+          if (contentType && contentType.includes('application/json')) {
+            const errorJson = await response.json();
+            console.error('❌ Server error response:', errorJson);
+
+            // Extract user-friendly message
+            const detail = errorJson.detail;
+            if (detail) {
+              if (typeof detail === 'string') {
+                errorDetails = detail;
+              } else if (detail.error) {
+                errorDetails = detail.error;
+                // Add tip if available
+                if (detail.tip) {
+                  errorDetails += ` (Tip: ${detail.tip})`;
+                } else if (detail.message) {
+                  errorDetails += ` - ${detail.message}`;
+                }
+              } else if (detail.message) {
+                errorDetails = detail.message;
+              } else {
+                errorDetails = JSON.stringify(detail);
+              }
+            } else if (errorJson.error) {
+              errorDetails = errorJson.error;
+            } else {
+              errorDetails = JSON.stringify(errorJson);
+            }
+          } else {
+            const errorText = await response.text();
+            console.error('❌ Server error text:', errorText);
+            errorDetails = errorText.substring(0, 150); // Limit length
+          }
+        } catch (parseError) {
+          console.error('❌ Could not parse error:', parseError);
+          errorDetails = `Server error (${response.status}). Please try again.`;
         }
-        console.error('❌ Download failed:', errorText);
-        throw new Error(errorText);
+
+        throw new Error(errorDetails || `Download failed. Please try again.`);
       }
 
+      console.log('✅ Response OK, creating blob...');
       const blob = await response.blob();
+      console.log(`📦 Blob size: ${blob.size} bytes, type: ${blob.type}`);
       const blobUrl = window.URL.createObjectURL(blob);
 
       // Create download link
@@ -94,7 +135,27 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail }) 
 
     } catch (err) {
       console.error(`❌ ${kind} download failed:`, err);
-      setError(err.message || `Failed to download ${kind}. Please try again.`);
+
+      // User-friendly error messages
+      let userMessage = err.message || `Failed to download ${kind}`;
+
+      // Clean up technical jargon for users
+      if (userMessage.includes('Failed to fetch')) {
+        userMessage = 'Connection error. Please check your internet and try again.';
+      } else if (userMessage.includes('NetworkError')) {
+        userMessage = 'Network error. Please try again.';
+      } else if (userMessage.includes('timeout')) {
+        userMessage = 'Download timed out. The video might be too large. Try again.';
+      } else if (userMessage.includes('CORS')) {
+        userMessage = 'Security error. Please try again or use a different browser.';
+      }
+
+      // Limit message length
+      if (userMessage.length > 150) {
+        userMessage = userMessage.substring(0, 147) + '...';
+      }
+
+      setError(userMessage);
     } finally {
       setLoadingVideo(false);
       setLoadingAudio(false);

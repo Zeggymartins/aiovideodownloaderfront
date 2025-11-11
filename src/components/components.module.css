@@ -110,6 +110,7 @@
 
 .nav-links .nav-link i {
   font-size: 1rem;
+  margin-right: 15px;
   transition: transform 0.3s ease;
 }
 
