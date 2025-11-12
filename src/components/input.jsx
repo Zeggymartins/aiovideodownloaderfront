@@ -108,23 +108,6 @@ const UrlInput = ({ url, setUrl, onSubmit }) => {
         </div>
       </InputGroup>
 
-      {/* Helper text */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "-2rem",
-          left: "50%",
-          transform: "translateX(-50%)",
-          color: "#6b7280",
-          fontSize: "0.8rem",
-          whiteSpace: "nowrap",
-          opacity: isFocused ? 1 : 0,
-          transition: "opacity 0.3s ease",
-        }}
-      >
-        <i className="bi bi-info-circle me-1"></i>
-        Supports YouTube, TikTok, Instagram & Twitter
-      </div>
     </Form>
   );
 };

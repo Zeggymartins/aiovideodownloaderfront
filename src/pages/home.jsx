@@ -106,6 +106,17 @@ export default function Home() {
               <p className="hero-subtitle">
                 Download videos from YouTube, TikTok, Instagram, Twitter and more.
                 Fast, free, and easy to use. No registration required.
+                <div className="mt-3 text-center small" style={{ color: "#cbd5f5" }}>
+                  <p className="mb-1">
+                    Paste a YouTube or TikTok link, then press <strong>Enter</strong> or tap the button.
+                  </p>
+                  <p className="mb-1">
+                    After extraction choose <strong>Audio</strong> (MP3) or <strong>Video</strong> (MP4) for download.
+                  </p>
+                  <p className="mb-0">
+                    Conversion usually takes <strong>2–4 minutes</strong> depending on length—please keep this tab open until it finishes.
+                  </p>
+                </div>
               </p>
 
               <div className="input-section">
@@ -114,6 +125,7 @@ export default function Home() {
                   setUrl={handleUrlChange}
                   onSubmit={handleSubmit}
                 />
+        
 
                 {loading && (
                   <div className="mt-4">
