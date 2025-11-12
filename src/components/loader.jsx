@@ -1,7 +1,7 @@
 // components/Loader.jsx - Enhanced Loader
 import React from 'react';
 import { Spinner } from 'react-bootstrap';
-import './components.module.css';
+import './components.css';
 
 const Loader = () => {
   return (

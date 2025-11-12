@@ -1,5 +1,5 @@
 import React from 'react';
-import './components.module.css';
+import './components.css';
 
 const PlatformBadge = ({ platform }) => {
   if (!platform) return null;

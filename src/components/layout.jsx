@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import './components.module.css';
+import './components.css';
 
 
 const Layout = ({ children }) => {

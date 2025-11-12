@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button, InputGroup } from "react-bootstrap";
 import { Send, Link2 } from "lucide-react";
-import "./components.module.css";
+import "./components.css";
 
 const UrlInput = ({ url, setUrl, onSubmit }) => {
   const [isFocused, setIsFocused] = useState(false);

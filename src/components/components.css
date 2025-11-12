@@ -23,7 +23,7 @@
   background: linear-gradient(90deg, 
     transparent 0%, 
     #3b82f6 20%, 
-    #fdb714 50%, 
+    #7d14fd 50%, 
     #3b82f6 80%, 
     transparent 100%
   );
@@ -75,7 +75,7 @@
 }
 
 .logo-dot {
-  color: #fdb714;
+  color: #6d14fd;
   font-size: 2rem;
   animation: pulse-dot 2s ease-in-out infinite;
 }
@@ -122,7 +122,7 @@
   transform: translateX(-50%);
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #3b82f6, #fdb714);
+  background: linear-gradient(90deg, #3b82f6, #ea14fd);
   transition: width 0.3s ease;
 }
 
@@ -142,7 +142,7 @@
 
 .nav-links .nav-link.active {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(253, 183, 20, 0.15));
-  color: #fdb714 !important;
+  color: #8114fd !important;
   font-weight: 600;
 }
 

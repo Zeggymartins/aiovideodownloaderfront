@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, ButtonGroup, Card } from "react-bootstrap";
 import { Loader2, CheckCircle, AlertCircle, Download, Music } from "lucide-react";
 import PlatformBadge from "./platformbadge";
-import "./components.module.css";
+import "./components.css";
 
 const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, originalUrl }) => {
   const [loadingVideo, setLoadingVideo] = useState(false);
@@ -24,7 +24,6 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
       console.log(`Title: ${title}`);
       console.log(`Backend Root: ${backendRoot}`);
 
-      // Decode proxy URL to see what's inside
       if (proxyUrl.includes('video_url=')) {
         const urlMatch = proxyUrl.match(/video_url=([^&]+)/);
         if (urlMatch) {
@@ -34,16 +33,12 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
         }
       }
 
-      // Build download URL
       let downloadUrl;
 
-      // The proxy_url from backend already contains the correct original URL
       if (proxyUrl.startsWith('/api')) {
         downloadUrl = `${backendRoot}${proxyUrl}`;
 
-        // Update kind parameter if needed
         if (kind === 'audio') {
-          // Replace kind=video with kind=audio or add kind=audio
           if (downloadUrl.includes('kind=video')) {
             downloadUrl = downloadUrl.replace('kind=video', 'kind=audio');
           } else if (!downloadUrl.includes('kind=')) {
@@ -78,14 +73,12 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
             const errorJson = await response.json();
             console.error('❌ Server error response:', errorJson);
 
-            // Extract user-friendly message
             const detail = errorJson.detail;
             if (detail) {
               if (typeof detail === 'string') {
                 errorDetails = detail;
               } else if (detail.error) {
                 errorDetails = detail.error;
-                // Add tip if available
                 if (detail.tip) {
                   errorDetails += ` (Tip: ${detail.tip})`;
                 } else if (detail.message) {
@@ -127,7 +120,6 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
       link.click();
       document.body.removeChild(link);
 
-      // Cleanup
       window.URL.revokeObjectURL(blobUrl);
 
       setDone(true);
@@ -136,7 +128,6 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
     } catch (err) {
       console.error(`❌ ${kind} download failed:`, err);
 
-      // User-friendly error messages
       let userMessage = err.message || `Failed to download ${kind}`;
 
       // Clean up technical jargon for users

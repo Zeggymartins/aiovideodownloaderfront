@@ -5,7 +5,7 @@ import UrlInput from '../components/input';
 import Loader from '../components/loader';
 import { extractVideo } from '../api/extractor';
 import './home.css';
-import '../components/components.module.css'; // ✅ keep your styles
+import '../components/components.css'; // ✅ keep your styles
 
 export default function Home() {
   const [url, setUrl] = useState('');
