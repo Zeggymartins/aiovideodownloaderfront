@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, ButtonGroup, Card } from "react-bootstrap";
 import { Loader2, CheckCircle, AlertCircle, Download, Music } from "lucide-react";
 import PlatformBadge from "./platformbadge";
@@ -9,13 +9,54 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
   const [loadingAudio, setLoadingAudio] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState(null);
+  const [progressVideo, setProgressVideo] = useState(0);
+  const [progressAudio, setProgressAudio] = useState(0);
+  const progressTimers = useRef({ video: null, audio: null });
+
+  useEffect(() => {
+    return () => {
+      Object.values(progressTimers.current).forEach((timer) => {
+        if (timer) clearInterval(timer);
+      });
+    };
+  }, []);
+
+  const startProgress = (type) => {
+    const setter = type === "video" ? setProgressVideo : setProgressAudio;
+    const key = type === "video" ? "video" : "audio";
+    setter(5);
+    if (progressTimers.current[key]) {
+      clearInterval(progressTimers.current[key]);
+    }
+    progressTimers.current[key] = setInterval(() => {
+      setter((prev) => {
+        if (prev >= 90) return prev;
+        return prev + 5;
+      });
+    }, 400);
+  };
+
+  const stopProgress = (type, success = false) => {
+    const setter = type === "video" ? setProgressVideo : setProgressAudio;
+    const key = type === "video" ? "video" : "audio";
+    if (progressTimers.current[key]) {
+      clearInterval(progressTimers.current[key]);
+      progressTimers.current[key] = null;
+    }
+    setter(success ? 100 : 0);
+    if (success) {
+      setTimeout(() => setter(0), 600);
+    }
+  };
 
   const handleDownload = async (kind = "video") => {
+    let success = false;
     try {
       if (kind === "video") setLoadingVideo(true);
       if (kind === "audio") setLoadingAudio(true);
       setDone(false);
       setError(null);
+      startProgress(kind);
 
       console.log(`🎯 Starting ${kind} download...`);
       console.log(`Platform: ${platform}`);
@@ -125,6 +166,7 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
 
       setDone(true);
       console.log(`✅ ${kind} download completed`);
+      success = true;
 
     } catch (err) {
       console.error(`❌ ${kind} download failed:`, err);
@@ -151,6 +193,7 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
     } finally {
       setLoadingVideo(false);
       setLoadingAudio(false);
+      stopProgress(kind, success);
       setTimeout(() => {
         setDone(false);
         setError(null);
@@ -328,6 +371,27 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
                 </>
               )}
             </Button>
+            {loadingVideo && (
+              <div
+                style={{
+                  width: "100%",
+                  height: "6px",
+                  background: "rgba(255,255,255,0.15)",
+                  borderRadius: "999px",
+                  overflow: "hidden",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                <div
+                  style={{
+                    width: `${progressVideo}%`,
+                    height: "100%",
+                    background: "linear-gradient(90deg,#60a5fa,#a855f7)",
+                    transition: "width 0.3s ease",
+                  }}
+                />
+              </div>
+            )}
 
             {/* Audio Download Button */}
             <Button
@@ -382,6 +446,27 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
                 </>
               )}
             </Button>
+            {loadingAudio && (
+              <div
+                style={{
+                  width: "100%",
+                  height: "6px",
+                  background: "rgba(253, 183, 20, 0.15)",
+                  borderRadius: "999px",
+                  overflow: "hidden",
+                  marginTop: "0.4rem",
+                }}
+              >
+                <div
+                  style={{
+                    width: `${progressAudio}%`,
+                    height: "100%",
+                    background: "linear-gradient(90deg,#fbbf24,#f97316)",
+                    transition: "width 0.3s ease",
+                  }}
+                />
+              </div>
+            )}
           </ButtonGroup>
 
           <div
