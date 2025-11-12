@@ -57,9 +57,10 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
         throw new Error('Invalid proxy URL format');
       }
 
-      console.log(`🎯 Final download URL: ${downloadUrl}`);
+      const fetchUrl = encodeURI(downloadUrl);
+      console.log(`🎯 Final download URL: ${fetchUrl}`);
 
-      const response = await fetch(downloadUrl);
+      const response = await fetch(fetchUrl);
 
       console.log(`📡 Response status: ${response.status}`);
       console.log(`📡 Response headers:`, response.headers);
