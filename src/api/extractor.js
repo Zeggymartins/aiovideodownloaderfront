@@ -153,9 +153,10 @@ export const downloadMedia = async (proxyUrl, title, platform, kind = 'video') =
             downloadUrl += `${separator}kind=audio`;
         }
 
-        console.log(`🎯 Final download URL: ${downloadUrl}`);
+        const fetchUrl = encodeURI(downloadUrl).replace(/#/g, '%23');
+        console.log(`🎯 Final download URL: ${fetchUrl}`);
 
-        const response = await fetch(downloadUrl);
+        const response = await fetch(fetchUrl);
 
         if (!response.ok) {
             const errorText = await response.text();

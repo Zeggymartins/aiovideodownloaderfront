@@ -57,7 +57,7 @@ const DownloadOptions = ({ proxyUrl, title, platform, backendRoot, thumbnail, or
         throw new Error('Invalid proxy URL format');
       }
 
-      const fetchUrl = encodeURI(downloadUrl);
+      const fetchUrl = encodeURI(downloadUrl).replace(/#/g, '%23');
       console.log(`🎯 Final download URL: ${fetchUrl}`);
 
       const response = await fetch(fetchUrl);
