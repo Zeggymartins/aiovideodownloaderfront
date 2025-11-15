@@ -1,40 +1,7 @@
 import React from 'react';
 import './home.css';
 import { Container } from 'react-bootstrap';
-
-const featureStory = {
-  title: 'Inside MediaVeed Labs: How We Keep Downloads Light-Speed',
-  date: 'January 2025',
-  excerpt:
-    'From edge caching to smart format prioritisation, we constantly tweak the pipeline so your MP4s arrive in seconds, even when platforms throttle traffic.',
-};
-
- const blogPosts = [
-  {
-    slug: 'creator-workflows-mp3',
-    title: '5 Creator Workflows Powered by Instant MP3s',
-    date: 'Jan 20, 2025',
-    tag: 'Creator Tips',
-    summary:
-      'Turn inspiration into action. Discover how podcasters, vloggers, and DJs use MediaVeed to build sample packs, remixes, and voice-over assets overnight.',
-  },
-  {
-    slug: 'hls-dash-speed',
-    title: 'Why HLS & DASH Make Downloads Slow (and what we do about it)',
-    date: 'Jan 12, 2025',
-    tag: 'Engineering',
-    summary:
-      'We break down the streaming protocols modern sites rely on, and explain the tricks—format ladders, chunk stitching, and caching—that keep your queue moving.',
-  },
-  {
-    slug: 'mediaveed-roadmap-2025',
-    title: 'Roadmap: Platforms & Power Features Coming in 2025',
-    date: 'Jan 2, 2025',
-    tag: 'Product',
-    summary:
-      'Threads, Facebook Reels, long-form audio extraction, and collaborative playlists are all on our radar. Here is a transparent look at what we are shipping.',
-  },
-];
+import { featureStory, blogPosts } from '../data/blogPosts';
 
 // const insights = [
 //   {
