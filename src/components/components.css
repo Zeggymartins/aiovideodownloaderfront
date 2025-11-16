@@ -3,28 +3,41 @@
 ============================= */
 .custom-navbar {
   background: transparent;
+  backdrop-filter: none;
+  border-bottom: 1px solid transparent;
+  padding: 0.2rem 0;
   position: sticky;
   top: 0;
   z-index: 1000;
-  padding: 0.4rem 0;
-  transition: padding 0.3s ease;
+  transition: all 0.3s ease;
+}
+  
+.navbar-scrolled {
+  background: rgba(17, 24, 39, 0.95);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(15px);
 }
 
-.custom-navbar::before {
+.custom-navbar::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.92);
-  border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.45);
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    #3b82f6 20%, 
+    #7d14fd 50%, 
+    #3b82f6 80%, 
+    transparent 100%
+  );
   opacity: 0;
-  transition: opacity 0.35s ease;
-  pointer-events: none;
-  backdrop-filter: blur(12px) saturate(160%);
+  animation: borderSlide 3s ease-in-out infinite;
 }
-
-.navbar-scrolled::before {
-  opacity: 1;
+.navbar-scrolled::after {
+  opacity: 0.8;
 }
 
 .custom-navbar::after {
@@ -65,8 +78,8 @@
 }
 
 .brand-logo {
-  font-size: 1.75rem;
-  font-weight: 800;
+  font-size: 1.0rem;
+  font-weight: 400;
   color: #f8fafc !important;
   text-decoration: none;
   display: flex;
@@ -99,8 +112,8 @@
 }
 
 .logo-text img {
-  width: 150px;
-  height: 125px;
+  width: 170px;
+  height: 100px;
   object-fit: contain;
   filter: drop-shadow(0 0 10px rgba(109, 20, 253, 0.4));
 }
